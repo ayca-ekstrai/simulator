@@ -17,7 +17,7 @@ ext {
 }
 
 dependencies {
-	compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.6.1'
+	/*compile group: 'org.slf4j', name: 'slf4', version: '1.6.1'*/
 	implementation 'com.azure.spring:azure-spring-boot-starter'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
