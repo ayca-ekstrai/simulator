@@ -37,7 +37,8 @@ public class ScheduledPublisher {
     public void logFixedRate() {
         //LOG.info("Time: " + Instant.now().toString());
         LOG.info("Message is being prepared " + Instant.now().toString());
-        senderClient.sendMessage(new ServiceBusMessage("Hello Test Publishing " + Instant.now().toString()));
+        senderClient.sendMessage(new ServiceBusMessage("Hello Test Publishing " + Instant.now().toString())
+        .setMessageId(Instant.now().toString()));
         LOG.info("Message is sent " + Instant.now().toString());
     }
 }
