@@ -40,5 +40,6 @@ public class ScheduledPublisher {
         senderClient.sendMessage(new ServiceBusMessage("Hello Test Publishing " + Instant.now().toString())
         .setMessageId(Instant.now().toString()));
         LOG.info("Message is sent " + Instant.now().toString());
+
     }
 }
