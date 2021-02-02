@@ -33,7 +33,7 @@ public class ScheduledPublisher {
 
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRate = 100000)
     public void logFixedRate() {
         //LOG.info("Time: " + Instant.now().toString());
         LOG.info("Message is being prepared " + Instant.now().toString());

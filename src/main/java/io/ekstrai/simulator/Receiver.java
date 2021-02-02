@@ -1,10 +1,8 @@
 package io.ekstrai.simulator;
 
 
-import com.azure.messaging.servicebus.ServiceBusClientBuilder;
-import com.azure.messaging.servicebus.ServiceBusErrorContext;
-import com.azure.messaging.servicebus.ServiceBusProcessorClient;
-import com.azure.messaging.servicebus.ServiceBusReceivedMessageContext;
+import com.azure.messaging.servicebus.*;
+import com.azure.messaging.servicebus.models.SubQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,24 +20,39 @@ public class Receiver {
                     "SharedAccessKeyName=RootManageSharedAccessKey;" +
                     "SharedAccessKey=GpTjswshvclzsEKyM92bJRk0qH7l0m8QbmS/UHrvWaQ=";
     private final String queueName = "machineevents";
-    private final ServiceBusProcessorClient receiverClient;
+    private final String subName = "machineeventsub";
+    private final String topicName = "machineevents";
+    //private final ServiceBusProcessorClient processorClient;
+    private final ServiceBusReceiverClient receiverClient;
 
     public Receiver() {
 
+//        receiverClient = new ServiceBusClientBuilder()
+//                .connectionString(primaryConnectionKey)
+//                .processor()
+//                .queueName(queueName)
+//                .processMessage(processMessage)
+//                .processError(processError)
+//                .disableAutoComplete()
+//                .buildProcessorClient();
+
         receiverClient = new ServiceBusClientBuilder()
                 .connectionString(primaryConnectionKey)
-                .processor()
-                .queueName(queueName)
-                .processMessage(processMessage)
-                .processError(processError)
-                .disableAutoComplete()
-                .buildProcessorClient();
-
+                .receiver()
+                .topicName(topicName)
+                .subscriptionName(subName)
+                .subQueue(SubQueue.DEAD_LETTER_QUEUE)
+                .buildClient();
     }
 
     @Autowired
     public void startReceiving() {
-        receiverClient.start();
+        final ServiceBusReceivedMessage message= receiverClient.peekMessage();
+        LOG.info("****** 1 MESSAGE RECEIVED ****** ");
+        LOG.info("Message ID: " + message.getMessageId());
+        LOG.info("Session ID: " + message.getMessageId());
+        LOG.info("Message Body: " + message.getBody());
+
     }
 
 
