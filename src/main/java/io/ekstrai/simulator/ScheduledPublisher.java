@@ -8,38 +8,47 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.Instant;
-
 
 @Component
 public class ScheduledPublisher {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScheduledPublisher.class);
 
-    private final String primaryConnectionKey =
+    //TODO move to app.properties
+    private static final String primaryConnectionKey =
             "Endpoint=sb://ekstraisb00.servicebus.windows.net/;" +
                     "SharedAccessKeyName=RootManageSharedAccessKey;" +
                     "SharedAccessKey=GpTjswshvclzsEKyM92bJRk0qH7l0m8QbmS/UHrvWaQ=";
-    private final String topicName = "machineevents";
-    private final ServiceBusSenderClient senderClient;
+    //TODO move to app.properties
+    private static final String topicName = "machineevents";
 
-    public ScheduledPublisher() {
 
-        senderClient = new ServiceBusClientBuilder()
+
+
+    @Scheduled(fixedRate = 10000)
+    public static void logFixedRate() {
+
+
+        final ServiceBusSenderClient client = new ServiceBusClientBuilder()
                 .connectionString(primaryConnectionKey)
                 .sender()
                 .topicName(topicName)
                 .buildClient();
 
+        final MachineEvent currentEvent = Utilities.randomEventGenerator();
+
+        client.sendMessage(
+                new ServiceBusMessage(Utilities.machineEventSerializer(currentEvent))
+                        .setMessageId(currentEvent.getTimeStamp().toString()));
+
+        LOG.info("Message sent successfully! ");
+        LOG.info(Utilities.prettyJson(currentEvent));
+
+        client.close();
+
+        LOG.info("Sender client is now closed. \n");
+
     }
 
-    @Scheduled(fixedRate = 100000)
-    public void logFixedRate() {
-        //LOG.info("Time: " + Instant.now().toString());
-        LOG.info("Message is being prepared " + Instant.now().toString());
-        senderClient.sendMessage(new ServiceBusMessage("Hello Test Publishing " + Instant.now().toString())
-        .setMessageId(Instant.now().toString()));
-        LOG.info("Message is sent " + Instant.now().toString());
 
-    }
 }

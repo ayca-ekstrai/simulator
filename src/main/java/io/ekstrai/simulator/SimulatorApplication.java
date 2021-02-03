@@ -13,3 +13,4 @@ public class SimulatorApplication {
 	}
 
 }
+//@EnableConfigurationProperties(ConfigProperties.class)
