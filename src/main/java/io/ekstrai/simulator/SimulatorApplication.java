@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.sql.DriverManager;
+
 @SpringBootApplication
 @EnableScheduling
 public class SimulatorApplication {
@@ -12,5 +14,6 @@ public class SimulatorApplication {
 		SpringApplication.run(SimulatorApplication.class, args);
 	}
 
+
 }
-//@EnableConfigurationProperties(ConfigProperties.class)
+//@EnableConfigurationProper ties(ConfigProperties.class)
