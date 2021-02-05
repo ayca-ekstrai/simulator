@@ -5,6 +5,7 @@ import com.azure.messaging.servicebus.ServiceBusMessage;
 import com.azure.messaging.servicebus.ServiceBusSenderClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,19 +15,18 @@ public class ScheduledPublisher {
 
     private static final Logger LOG = LoggerFactory.getLogger(ScheduledPublisher.class);
 
-    //TODO move to app.properties
-    private static final String primaryConnectionKey =
-            "Endpoint=sb://ekstraisb00.servicebus.windows.net/;" +
-                    "SharedAccessKeyName=RootManageSharedAccessKey;" +
-                    "SharedAccessKey=GpTjswshvclzsEKyM92bJRk0qH7l0m8QbmS/UHrvWaQ=";
-    //TODO move to app.properties
-    private static final String topicName = "machineevents";
+
+    @Value("${servicebus.primarykey}")
+    private String primaryConnectionKey;
+
+    @Value("${servicebus.topicname}")
+    private String topicName;
 
 
 
 
     @Scheduled(fixedRate = 10000)
-    public static void logFixedRate() {
+    public void logFixedRate() {
 
 
         final ServiceBusSenderClient client = new ServiceBusClientBuilder()
